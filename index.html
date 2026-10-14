@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/jpeg" href="/logo.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Castillo Cup - Torneo de PES 6 | Mata-Mata 32 Jugadores</title>
+  <meta name="description"
+    content="Martín Castillo Pro Evolution Soccer 6. Torneo mata-mata de 32 jugadores, formato ida y vuelta con $50.000 ARS para el campeón y $20.000 ARS en el Prode." />
+
+  <!-- Google Fonts: Outfit (modern esports heading) & Inter (clean UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Top Prototype Announcement Ribbon -->
+    <div class="prototype-top-ribbon">
+      <div class="prototype-ribbon-content">
+        <span class="proto-pill">🧪 PROTOTIPO</span>
+        <span class="proto-msg">
+          Versión de prueba como jugador.
+          <strong>El 28 de Octubre (18:00 hs), será realizado el sorteo definitivo por Martín, el organizador</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- Header / Nav -->
+    <header class="app-header" id="appHeader">
+      <div class="header-container">
+        <div class="brand-wrapper">
+          <img src="/logo.jpg" alt="Castillo Cup PES 6" class="brand-logo" />
+          <div class="brand-text">
+            <span class="brand-title">CASTILLO CUP</span>
+            <span class="brand-tag">PES 6 ONLINE</span>
+          </div>
+        </div>
+
+        <nav class="nav-links" id="mainNav">
+          <button class="nav-btn active" data-tab-target="bracket">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 3v12" />
+              <path d="M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+              <path d="M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+              <path d="M18 9v12" />
+            </svg>
+            <span>Fixture</span>
+          </button>
+          <button class="nav-btn" data-tab-target="draw">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            </svg>
+            <span>Sorteo en Vivo</span>
+          </button>
+          <button class="nav-btn" data-tab-target="prode">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="6" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
+            <span>Prode ($20.000)</span>
+          </button>
+          <button class="nav-btn" data-tab-target="players">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span>Jugadores (32)</span>
+          </button>
+          <button class="nav-btn" data-tab-target="rules">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+            <span>Reglamento</span>
+          </button>
+        </nav>
+
+        <div class="header-actions">
+          <button class="action-icon-btn" id="soundToggleBtn" title="Activar/Silenciar Sonido" aria-label="Sonido">
+            <span id="soundIcon">🔊</span>
+          </button>
+          <button class="btn btn-admin-header" id="adminHeaderBtn">
+            <span>⚙️ Panel Admin</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-bg-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="live-pulse"></span>
+          <span>PES 6 ONLINE • CASTILLO CUP 2026</span>
+        </div>
+
+        <h1 class="hero-title">
+          LA COPA DEFINITIVA <br />
+          <span class="text-gradient-gold">CASTILLO CUP</span>
+        </h1>
+
+        <div class="free-entry-hero-banner">
+          <span class="free-icon">🎁</span>
+          <span class="free-text">INSCRIPCIÓN: <strong>$0</strong> • POZO A REPARTIR: <strong>$70.000
+              ARS</strong></span>
+        </div>
+
+        <p class="hero-desc">
+          32 Jugadores mano a mano en partidos de Ida y Vuelta con resultado global y definición por tercer partido.
+          Lanzamiento oficial el <strong>28 de Octubre a las 18:00 hs</strong>.
+        </p>
+
+        <!-- Prizes Showcase Grid -->
+        <div class="prizes-showcase-grid">
+          <div class="prize-card champion-card">
+            <div class="prize-icon-wrapper">🏆</div>
+            <div class="prize-card-content">
+              <span class="prize-card-tag">CAMPEÓN CASTILLO CUP</span>
+              <span class="prize-card-amount">$50.000 ARS</span>
+              <span class="prize-card-sub">Premio en efectivo para el campeón de PES 6 ONLINE</span>
+            </div>
+          </div>
+
+          <div class="prize-card prode-card">
+            <div class="prize-icon-wrapper">🎯</div>
+            <div class="prize-card-content">
+              <span class="prize-card-tag">GANADOR DEL PRODE</span>
+              <span class="prize-card-amount">$20.000 ARS</span>
+              <span class="prize-card-sub">Exacto: +3 pts | Ganador: +1 pt (16-avos)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Countdown Timer to Oct 28 18:00 hs -->
+        <div class="countdown-container" id="countdownBox">
+          <div class="countdown-label">
+            <span class="countdown-icon">⏱️</span>
+            <span>CUENTA REGRESIVA PARA EL INICIO (28/10 • 18:00 HS)</span>
+          </div>
+          <div class="countdown-units">
+            <div class="time-block">
+              <span class="time-num" id="cdDays">00</span>
+              <span class="time-lbl">Días</span>
+            </div>
+            <span class="time-sep">:</span>
+            <div class="time-block">
+              <span class="time-num" id="cdHours">00</span>
+              <span class="time-lbl">Horas</span>
+            </div>
+            <span class="time-sep">:</span>
+            <div class="time-block">
+              <span class="time-num" id="cdMinutes">00</span>
+              <span class="time-lbl">Minutos</span>
+            </div>
+            <span class="time-sep">:</span>
+            <div class="time-block">
+              <span class="time-num" id="cdSeconds">00</span>
+              <span class="time-lbl">Segundos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Dynamic Content Tabs -->
+    <main class="main-content-area">
+      <!-- TAB 1: Bracket & Fixture -->
+      <section class="tab-pane active" id="pane-bracket">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <span class="pane-badge">MATA-MATA 32 JUGADORES</span>
+            <h2 class="section-heading">Cuadro Eliminatorio del Torneo</h2>
+            <p class="section-sub">
+              Visualizá el fixture completo. Hacé click en cualquier partido para ver el detalle de Ida y Vuelta o
+              cargar los resultados.
+            </p>
+          </div>
+
+          <!-- View Switcher & Bracket Controls -->
+          <div class="bracket-view-controls">
+            <div class="view-switcher-group">
+              <button class="switch-btn active" id="btnViewTree" title="Vista Árbol Gráfico">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                </svg>
+                <span>Árbol Completo</span>
+              </button>
+              <button class="switch-btn" id="btnViewRounds" title="Vista por Rondas (Mobile)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                <span>Por Rondas</span>
+              </button>
+            </div>
+
+            <!-- Zoom Controls for Tree -->
+            <div class="zoom-controls" id="treeZoomControls">
+              <button class="zoom-btn" id="btnZoomOut" title="Reducir Zoom">-</button>
+              <span class="zoom-level" id="zoomLevelText">100%</span>
+              <button class="zoom-btn" id="btnZoomIn" title="Aumentar Zoom">+</button>
+              <button class="zoom-btn reset" id="btnZoomReset" title="Restablecer">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bracket Container -->
+        <div id="bracketRenderContainer" class="bracket-viewport">
+          <!-- Dynamic Bracket or Rounds injected here -->
+        </div>
+      </section>
+
+      <!-- TAB 2: Sorteo en Vivo -->
+      <section class="tab-pane" id="pane-draw">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <span class="pane-badge gold">BOLILLERO DIGITAL</span>
+            <h2 class="section-heading">El Gran Sorteo de los 16-avos</h2>
+            <p class="section-sub">
+              Simulá o presenciá el sorteo interactivo de la Castillo Cup. Cada jugador se extrae aleatoriamente y se
+              posiciona en su llave correspondiente.
+            </p>
+          </div>
+        </div>
+
+        <div class="draw-experience-container">
+          <!-- Panel de Control del Sorteo -->
+          <div class="draw-controls-bar">
+            <div class="draw-status-group">
+              <div class="draw-status-pill" id="drawStatusBadge">
+                <span class="draw-pulse"></span>
+                <span id="drawStatusText">🟢 Sorteo Único de Prueba</span>
+              </div>
+            </div>
+
+            <div class="draw-buttons-row" id="drawButtonsRow">
+              <button class="btn btn-gold" id="btnStartAutoDraw">
+                <span>▶️ Realizar Sorteo Definitivo</span>
+              </button>
+              <button class="btn btn-outline" id="btnResetDraw" style="display: none;">
+                <span>🔄 Reiniciar Sorteo</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Banner de Sorteo Bloqueado para este Dispositivo -->
+          <div class="draw-locked-banner hidden" id="drawLockedBanner">
+            <div class="locked-banner-icon">🔒</div>
+            <div class="locked-banner-content">
+              <h4>Sorteo Realizado en este Dispositivo</h4>
+              <p>Tus 16 cruces ya quedaron fijados para probar el Fixture y Prode.</p>
+              <div class="locked-banner-actions">
+                <button type="button" class="btn btn-primary" id="btnGoToFixtureFromDraw">
+                  <span>🏆 Ver Fixture</span>
+                </button>
+                <button type="button" class="btn btn-gold" id="btnGoToProdeFromDraw">
+                  <span>🎯 Ir al Prode</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spotlight Central de la Bolilla Extraída -->
+          <div class="draw-stage">
+            <div class="draw-podium">
+              <div class="draw-ball-animation" id="drawBallSphere">
+                <span class="ball-pes-logo">PES 6</span>
+                <div class="ball-glow"></div>
+              </div>
+              <div class="draw-announcement" id="drawAnnouncement">
+                <span class="announcement-sub" id="announcementSub">BOLILLERO LISTO</span>
+                <h3 class="announcement-player" id="announcementPlayer">Presioná un botón para comenzar</h3>
+                <span class="announcement-dest" id="announcementDest">32 Jugadores esperando en el bombo</span>
+              </div>
+            </div>
+
+            <!-- Bombo con los Jugadores restantes -->
+            <div class="draw-pool-wrapper">
+              <div class="pool-header">
+                <h4>Jugadores en el Bombo (<span id="poolRemainingCount">32</span>/32)</h4>
+                <small>Se irán extrayendo uno a uno</small>
+              </div>
+              <div class="pool-players-grid" id="poolPlayersList">
+                <!-- Injected pool badges -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Previsualización de los 16 Cruces Sorteados -->
+          <div class="draw-matches-preview">
+            <div class="preview-header">
+              <h3>Cruces de 16-avos Sorteados</h3>
+              <span class="preview-sub">Asignación en tiempo real a las 16 llaves</span>
+            </div>
+            <div class="draw-pairs-grid" id="drawPairsGrid">
+              <!-- 16 pair preview cards -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: Prode -->
+      <section class="tab-pane" id="pane-prode">
+        <div id="prodeContainer">
+          <!-- ProdeManager render -->
+        </div>
+      </section>
+
+      <!-- TAB 4: Jugadores -->
+      <section class="tab-pane" id="pane-players">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <span class="pane-badge">32 PARTICIPANTES</span>
+            <h2 class="section-heading">Lista de Jugadores Inscriptos</h2>
+            <p class="section-sub">
+              Los 32 competidores listos para disputar la gloria de la Castillo Cup y los $50.000 ARS.
+            </p>
+          </div>
+
+          <!-- Buscador de Jugadores -->
+          <div class="player-search-box">
+            <input type="text" id="playerSearchInput" placeholder="Buscar jugador por nombre..."
+              class="search-input">
+            <span class="search-icon">🔍</span>
+          </div>
+        </div>
+
+        <div class="players-cards-grid" id="playersCardsGrid">
+          <!-- 32 Players cards injected here -->
+        </div>
+      </section>
+
+      <!-- TAB 5: Reglamento -->
+      <section class="tab-pane" id="pane-rules">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <span class="pane-badge gold">REGLAMENTO Y PREMIOS</span>
+            <h2 class="section-heading">Bases, Condiciones y Equipos Oficiales</h2>
+            <p class="section-sub">
+              Configuración espejo por ronda para garantizar la paridad competitiva en PES 6.
+            </p>
+          </div>
+        </div>
+
+        <!-- Vitrina de Equipos Oficiales por Ronda -->
+        <div class="round-team-cards-grid">
+          <div class="round-team-card">
+            <img src="/united.png" alt="Manchester United" class="round-team-crest-large">
+            <span class="round-team-phase">16-avos de Final</span>
+            <h4 class="round-team-name">Manchester United</h4>
+            <p class="round-team-rule">🔴 Todos United</p>
+          </div>
+
+          <div class="round-team-card">
+            <img src="/milan.png" alt="AC Milán" class="round-team-crest-large">
+            <span class="round-team-phase">Octavos de Final</span>
+            <h4 class="round-team-name">AC Milán</h4>
+            <p class="round-team-rule">🔴⚫ Todos Milán</p>
+          </div>
+
+          <div class="round-team-card">
+            <img src="/newcastle.png" alt="Newcastle United" class="round-team-crest-large">
+            <span class="round-team-phase">Cuartos de Final</span>
+            <h4 class="round-team-name">Newcastle United</h4>
+            <p class="round-team-rule">⚪⚫ Todos Newcastle</p>
+          </div>
+
+          <div class="round-team-card">
+            <img src="/italia.png" alt="Italia" class="round-team-crest-large">
+            <span class="round-team-phase">Semifinales</span>
+            <h4 class="round-team-name">Selección de Italia</h4>
+            <p class="round-team-rule">🔵 Todos Italia</p>
+          </div>
+
+          <div class="round-team-card final">
+            <img src="/brasil.png" alt="Brasil" class="round-team-crest-large">
+            <span class="round-team-phase">Gran Final</span>
+            <h4 class="round-team-name">Selección de Brasil</h4>
+            <p class="round-team-rule">🟡🟢 Brasil vs. Brasil</p>
+          </div>
+        </div>
+
+        <div class="rules-cards-grid">
+          <div class="rule-card">
+            <div class="rule-num">01</div>
+            <h3>Formato Mata-Mata (32 Jugadores)</h3>
+            <p>El torneo se juega por eliminación directa. Las fases son: 16-avos de final, Octavos, Cuartos,
+              Semifinales y Gran Final.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-num">02</div>
+            <h3>Partidos Ida y Vuelta (Resultado Global)</h3>
+            <p>Cada llave se compone de 2 partidos. El clasificado se determina por la suma de goles del partido de Ida
+              y el de Vuelta (Marcador Global).</p>
+          </div>
+
+          <div class="rule-card highlight">
+            <div class="rule-num">03</div>
+            <h3>Desempate en Tercer Partido</h3>
+            <p>Si al finalizar los dos partidos el marcador global es un empate exacto, se jugará un <strong>tercer
+                partido de desempate con Tiempo Extra y Penales</strong>.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-num">04</div>
+            <h3>Premios</h3>
+            <ul class="rule-bullets">
+              <li>🏆 <strong>Campeón del Torneo PES 6:</strong> $50.000 Pesos Argentinos.</li>
+              <li>🎯 <strong>Ganador del Prode (16-avos):</strong> $20.000 Pesos Argentinos.</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-num">05</div>
+            <h3>Lanzamiento y Fechas Clave</h3>
+            <p>El torneo inicia el <strong>28 de Octubre a las 18:00 hs</strong>. El sorteo oficial se llevará a cabo
+              previo a dicha fecha para que todos los jugadores conozcan a sus rivales.</p>
+          </div>
+
+          <div class="rule-card highlight">
+            <div class="rule-num">06</div>
+            <h3>Configuración de Sala PES 6</h3>
+            <ul class="rule-bullets game-cfg-list">
+              <li><span>Condición física:</span> <strong>Al azar</strong></li>
+              <li><span>Lesión:</span> <strong>Sí</strong></li>
+              <li><span>Tiempo:</span> <strong>10 min.</strong></li>
+              <li><span>Tipo de partido:</span> <strong>Largo</strong></li>
+              <li><span>Sustituciones:</span> <strong>5 cambios</strong></li>
+              <li><span>Clima:</span> <strong>Despejado</strong></li>
+              <li><span>Estación:</span> <strong>Verano</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <img src="/logo.jpg" alt="Logo" class="footer-logo">
+          <div>
+            <strong>Castillo Cup • PES 6</strong>
+            <p>El torneo nostálgico y competitivo más apasionante de la comunidad.</p>
+          </div>
+        </div>
+
+        <div class="footer-meta">
+          <div class="footer-prizes-pill">
+            <span>🏆 Pozo Total: $70.000 ARS</span>
+          </div>
+          <p class="copyright">© 2026 Castillo Cup PES 6. Desarrollado por Martín Castillo.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
