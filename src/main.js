@@ -78,6 +78,7 @@ function setupNavigation() {
 
       navButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
       panes.forEach(pane => {
         pane.classList.toggle('active', pane.id === `pane-${target}`);
