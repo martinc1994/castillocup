@@ -113,10 +113,12 @@ function setupHeaderActions() {
     if (!isMuted) sound.playClick();
   });
 
-  // Admin Modal
-  adminBtn.addEventListener('click', () => {
-    adminManager.open();
-  });
+  // Admin Modal (null-safe en caso de estar comentado en modo jugadores)
+  if (adminBtn && adminManager) {
+    adminBtn.addEventListener('click', () => {
+      adminManager.open();
+    });
+  }
 }
 
 // -------------------------------------------------------------
