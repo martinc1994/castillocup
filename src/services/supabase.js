@@ -1,8 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Credenciales desde variables de entorno de Vite (.env)
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Credenciales desde variables de entorno de Vite (.env) con fallback a las credenciales oficiales de producción
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL || "https://fktswsdyjdemzcyknbfx.supabase.co";
+const supabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrdHN3c2R5amRlbXpjeWtuYmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyOTc5NDAsImV4cCI6MjEwODg3Mzk0MH0.LHNA3vBu8L7jH_Mcm2SIeLfYvmCBReH2BUv_deQUkk8";
 export const DEFAULT_ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || "castillo2026";
 
 // Determinar si Supabase está configurado con valores reales
