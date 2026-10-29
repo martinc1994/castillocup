@@ -53,7 +53,7 @@ export const TOURNAMENT_INFO = {
   subtitle: "Mata-Mata 32 Jugadores",
   slogan: "PES 6 ONLINE",
   entryFee: "$0 (Inscripción Gratuita)",
-  launchDate: "2026-10-28T18:00:00",
+  launchDate: "2026-10-31T11:00:00",
   drawDate: "2026-10-27T21:00:00",
   prizes: {
     champion: {

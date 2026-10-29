@@ -225,7 +225,7 @@ export class AdminManager {
 
   copyTournamentSummary() {
     let text = `🏰 *CASTILLO CUP - PES 6 ONLINE* 🏆%0A`;
-    text += `📅 Lanzamiento: 28 de Octubre - 18:00 hs%0A`;
+    text += `📅 Lanzamiento: Sábado 31 de Octubre - 11:00 hs%0A`;
     text += `💰 Pozo Campeón: $50.000 ARS | Prode: $20.000 ARS%0A`;
     text += `🎁 Inscripción: $0 (Gratuita)%0A%0A`;
 

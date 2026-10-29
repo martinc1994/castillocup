@@ -510,6 +510,31 @@ h1, h2, h3, h4, h5 {
   user-select: none;
 }
 
+.countdown-container.tournament-started {
+  border-color: rgba(0, 245, 212, 0.45);
+  background: rgba(10, 25, 30, 0.88);
+  box-shadow: 0 0 25px rgba(0, 245, 212, 0.25);
+  padding: 1.1rem 2.2rem;
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.countdown-started {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.countdown-started-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.55rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 15px rgba(0, 245, 212, 0.5);
+}
+
 /* ===================================================================
    MAIN CONTENT & TABS
    =================================================================== */
