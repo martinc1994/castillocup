@@ -260,6 +260,31 @@ export function loadTournamentState() {
           eber.confirmed = true;
           delete eber.note;
         }
+
+        // Sincronizar reemplazo de Alejinho por Martin94 (ID 12)
+        const martin = parsed.players?.find(p => p.id === 12 || p.name === "Alejinho");
+        if (martin) {
+          martin.name = "Martin94";
+          martin.alias = "Martin94";
+          martin.confirmed = true;
+        }
+
+        // Sincronizar en llaves existentes si estuviera asignado Alejinho
+        Object.keys(parsed.rounds || {}).forEach(rk => {
+          parsed.rounds[rk]?.forEach(m => {
+            ["player1", "player2", "winner"].forEach(slot => {
+              if (m[slot] && (m[slot].id === 12 || m[slot].name === "Alejinho")) {
+                m[slot].name = "Martin94";
+                m[slot].alias = "Martin94";
+              }
+            });
+          });
+        });
+        if (parsed.champion && (parsed.champion.id === 12 || parsed.champion.name === "Alejinho")) {
+          parsed.champion.name = "Martin94";
+          parsed.champion.alias = "Martin94";
+        }
+
         return parsed;
       }
     }

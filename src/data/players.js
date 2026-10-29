@@ -11,7 +11,7 @@ export const INITIAL_PLAYERS = [
   { id: 9, name: "Cyclops", alias: "Cyclops", confirmed: true, badge: "ARG", favoriteTeam: "Liverpool" },
   { id: 10, name: "Mati Rosarino", alias: "Mati Rosarino", confirmed: true, badge: "ARG", favoriteTeam: "Valencia" },
   { id: 11, name: "Yordi", alias: "Yordi", confirmed: true, badge: "ARG", favoriteTeam: "Bayern Múnich" },
-  { id: 12, name: "Alejinho", alias: "Alejinho", confirmed: true, badge: "ARG", favoriteTeam: "Roma" },
+  { id: 12, name: "Martin94", alias: "Martin94", confirmed: true, badge: "ARG", favoriteTeam: "Roma" },
   { id: 13, name: "Axel Contreras", alias: "Axel Contreras", confirmed: true, badge: "ARG", favoriteTeam: "Lyon" },
   { id: 14, name: "Juann", alias: "Juann", confirmed: true, badge: "ARG", favoriteTeam: "Porto" },
   { id: 15, name: "Montana", alias: "Montana", confirmed: true, badge: "ARG", favoriteTeam: "Sevilla" },
