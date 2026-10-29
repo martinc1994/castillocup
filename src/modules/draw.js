@@ -62,14 +62,6 @@ export class DrawManager {
 
   // Ejecuta el sorteo automáticamente con animación más pausada (850ms)
   startAutoDraw(speed = 850) {
-    const lockInfo = isDrawLocked();
-    if (lockInfo.locked) {
-      if (this.onUpdate) {
-        this.onUpdate({ isAlreadyLocked: true, lockInfo });
-      }
-      return;
-    }
-
     if (this.isRunning) return;
     this.speed = speed;
     this.isRunning = true;
@@ -125,9 +117,6 @@ export class DrawManager {
     this.state.drawDate = new Date().toISOString();
     saveTournamentState(this.state);
 
-    // Bloquear sorteo definitivo para este dispositivo / IP
-    const lockInfo = lockDraw();
-
     sound.playWhistle();
 
     // Recibimiento estilo cancha: Papelitos blancos, humo de bengalas y fuegos artificiales sincronizados
@@ -138,20 +127,11 @@ export class DrawManager {
     }
 
     if (this.onUpdate) {
-      this.onUpdate({ isComplete: true, isLocked: true, lockInfo });
+      this.onUpdate({ isComplete: true });
     }
   }
 
-  resetDraw(force = false) {
-    if (!force) {
-      const lockInfo = isDrawLocked();
-      if (lockInfo.locked) {
-        if (this.onUpdate) {
-          this.onUpdate({ isAlreadyLocked: true, lockInfo });
-        }
-        return;
-      }
-    }
+  resetDraw() {
     this.pauseAutoDraw();
     this.drawnCount = 0;
     this.remainingPlayers = [];

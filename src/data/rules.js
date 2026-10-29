@@ -30,7 +30,7 @@ export const ROUND_TEAMS = {
   r2: {
     roundKey: "r2",
     roundName: "Semifinales",
-    teamName: "Selección de Italia",
+    teamName: "Italia",
     shortName: "Italia",
     badgeFile: "italia.png",
     ruleLabel: "Todos Italia",
@@ -39,7 +39,7 @@ export const ROUND_TEAMS = {
   r1: {
     roundKey: "r1",
     roundName: "Gran Final",
-    teamName: "Selección de Brasil",
+    teamName: "Brasil",
     shortName: "Brasil vs. Brasil",
     badgeFile: "brasil.png",
     ruleLabel: "Brasil vs. Brasil",
@@ -53,7 +53,7 @@ export const TOURNAMENT_INFO = {
   subtitle: "Mata-Mata 32 Jugadores",
   slogan: "PES 6 ONLINE",
   entryFee: "$0 (Inscripción Gratuita)",
-  launchDate: "2026-10-31T11:00:00",
+  launchDate: "2026-10-30T22:00:00",
   drawDate: "2026-10-27T21:00:00",
   prizes: {
     champion: {
@@ -87,8 +87,8 @@ export const TOURNAMENT_INFO = {
     { round: "16-avos de Final", rule: "Todos United", team: "Manchester United", file: "united.png" },
     { round: "Octavos de Final", rule: "Todos Milán", team: "AC Milán", file: "milan.png" },
     { round: "Cuartos de Final", rule: "Todos Newcastle", team: "Newcastle United", file: "newcastle.png" },
-    { round: "Semifinal", rule: "Todos Italia", team: "Selección de Italia", file: "italia.png" },
-    { round: "Gran Final", rule: "Brasil vs. Brasil", team: "Selección de Brasil", file: "brasil.png" }
+    { round: "Semifinal", rule: "Todos Italia", team: "Italia", file: "italia.png" },
+    { round: "Gran Final", rule: "Brasil vs. Brasil", team: "Brasil", file: "brasil.png" }
   ],
   rules: [
     {

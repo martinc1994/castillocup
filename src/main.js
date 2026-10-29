@@ -4,9 +4,10 @@ import { renderBracketTree, renderRoundsView } from './modules/bracket.js';
 import { DrawManager } from './modules/draw.js';
 import { ProdeManager } from './modules/prode.js';
 import { MatchModal } from './components/MatchModal.js';
-import { AdminManager } from './modules/admin.js';
+import { AdminManager, isAdminAuthenticated } from './modules/admin.js';
 import { sound } from './modules/audio.js';
 import { TOURNAMENT_INFO } from './data/rules.js';
+import { fetchRemoteTournamentState, saveRemoteTournamentState, isSupabaseConfigured } from './services/supabase.js';
 
 // Application State
 let tournamentState = loadTournamentState();
@@ -22,8 +23,26 @@ let adminManager = null;
 
 // Initialize App
 function initApp() {
+  // Limpieza preventiva de pruebas locales para garantizar un inicio en blanco
+  try {
+    const obsoleteKeys = [
+      "castillo_cup_tournament_state_v1",
+      "castillo_cup_tournament_state_v2",
+      "castillo_cup_prode_submissions_v1",
+      "castillo_cup_draw_lock_v1",
+      "castillo_cup_my_prode"
+    ];
+    obsoleteKeys.forEach(key => localStorage.removeItem(key));
+  } catch (err) {
+    //
+  }
+
   // Setup Match and Admin Modals
-  matchModal = new MatchModal(tournamentState, (updatedMatchId) => {
+  matchModal = new MatchModal(tournamentState, async (updatedMatchId) => {
+    saveTournamentState(tournamentState);
+    if (isAdminAuthenticated() && isSupabaseConfigured()) {
+      await saveRemoteTournamentState(tournamentState);
+    }
     refreshBracketViews();
     if (prodeManager) prodeManager.render(document.getElementById('prodeContainer'));
   });
@@ -54,6 +73,40 @@ function initApp() {
   // Setup Draw Section UI
   setupDrawSection();
 
+  // Sincronizar automáticamente el fixture oficial desde Supabase al iniciar
+  if (isSupabaseConfigured()) {
+    fetchRemoteTournamentState().then(remoteState => {
+      if (remoteState && remoteState.rounds && remoteState.isDrawn) {
+        Object.assign(tournamentState, remoteState);
+        saveTournamentState(tournamentState);
+        refreshAllViews();
+      } else if (!remoteState || !remoteState.isDrawn) {
+        // Si en la base de datos oficial aún no se realizó el sorteo, mantener la grilla vacía
+        tournamentState.isDrawn = false;
+        tournamentState.drawDate = null;
+        Object.keys(tournamentState.rounds).forEach(rk => {
+          tournamentState.rounds[rk].forEach(m => {
+            m.player1 = null;
+            m.player2 = null;
+            m.score1_ida = null;
+            m.score2_ida = null;
+            m.score1_vuelta = null;
+            m.score2_vuelta = null;
+            m.score1_extra = null;
+            m.score2_extra = null;
+            m.penalties1 = null;
+            m.penalties2 = null;
+            m.status = "pending";
+            m.winner = null;
+          });
+        });
+        tournamentState.champion = null;
+        saveTournamentState(tournamentState);
+        refreshAllViews();
+      }
+    });
+  }
+
   // Setup Players Section
   setupPlayersSection();
 
@@ -70,6 +123,7 @@ function initApp() {
 function setupNavigation() {
   const navButtons = document.querySelectorAll('#mainNav .nav-btn');
   const panes = document.querySelectorAll('.tab-pane');
+  const heroSection = document.getElementById('heroSection');
 
   navButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -83,6 +137,15 @@ function setupNavigation() {
       panes.forEach(pane => {
         pane.classList.toggle('active', pane.id === `pane-${target}`);
       });
+
+      // Solo la página "Fixture" muestra la carátula con cuenta regresiva
+      if (heroSection) {
+        if (target === 'bracket') {
+          heroSection.classList.remove('hidden');
+        } else {
+          heroSection.classList.add('hidden');
+        }
+      }
 
       // Special re-renders when switching tabs
       if (target === 'bracket') {
@@ -99,7 +162,7 @@ function setupNavigation() {
 function setupHeaderActions() {
   const soundBtn = document.getElementById('soundToggleBtn');
   const soundIcon = document.getElementById('soundIcon');
-  const adminBtn = document.getElementById('adminHeaderBtn');
+  const adminBtn = document.getElementById('adminFooterBtn') || document.getElementById('adminHeaderBtn');
 
   // Sound Toggle
   const updateSoundIcon = () => {
@@ -113,7 +176,7 @@ function setupHeaderActions() {
     if (!isMuted) sound.playClick();
   });
 
-  // Admin Modal (null-safe en caso de estar comentado en modo jugadores)
+  // Admin Modal (botón discreto en footer)
   if (adminBtn && adminManager) {
     adminBtn.addEventListener('click', () => {
       adminManager.open();
@@ -122,7 +185,7 @@ function setupHeaderActions() {
 }
 
 // -------------------------------------------------------------
-// COUNTDOWN TIMER (SÁBADO 31/10 11:00 HS)
+// COUNTDOWN TIMER (VIERNES 30/10 22:00 HS)
 // -------------------------------------------------------------
 function startCountdown() {
   const targetDate = new Date(TOURNAMENT_INFO.launchDate).getTime();
@@ -238,7 +301,7 @@ function refreshBracketViews() {
 
   if (activeView === 'tree') {
     renderBracketTree(container, tournamentState, (matchId) => {
-      matchModal.open(matchId);
+      matchModal.open(matchId, isAdminAuthenticated());
     });
     // Reapply zoom if active
     const wrapper = container.querySelector('.bracket-tree-wrapper');
@@ -247,7 +310,7 @@ function refreshBracketViews() {
     }
   } else {
     renderRoundsView(container, tournamentState, activeRoundTab, (matchId) => {
-      matchModal.open(matchId);
+      matchModal.open(matchId, isAdminAuthenticated());
     }, (newRoundKey) => {
       activeRoundTab = newRoundKey;
       refreshBracketViews();
@@ -259,7 +322,7 @@ function refreshBracketViews() {
 // LIVE DRAW SYSTEM (EL GRAN SORTEO)
 // -------------------------------------------------------------
 function checkAndApplyDrawLockState() {
-  const lockInfo = isDrawLocked();
+  const isAdmin = isAdminAuthenticated();
   const lockedBanner = document.getElementById('drawLockedBanner');
   const buttonsRow = document.getElementById('drawButtonsRow');
   const statusBadge = document.getElementById('drawStatusText');
@@ -271,28 +334,44 @@ function checkAndApplyDrawLockState() {
 
   const isDrawn = tournamentState.isDrawn && tournamentState.rounds.r16[0]?.player1 && tournamentState.rounds.r16[0]?.player2;
 
-  if (lockInfo.locked || isDrawn) {
-    if (lockedBanner) lockedBanner.classList.remove('hidden');
+  if (isDrawn) {
+    if (lockedBanner) {
+      lockedBanner.classList.remove('hidden');
+      const bannerTitle = lockedBanner.querySelector('h4');
+      const bannerP = lockedBanner.querySelector('p');
+      if (bannerTitle) bannerTitle.textContent = 'Sorteo Oficial Realizado';
+      if (bannerP) bannerP.textContent = 'Los 16 cruces quedaron formalmente asignados. Podés explorar el Fixture y registrar tu jugada en el Prode.';
+    }
     if (buttonsRow) buttonsRow.style.display = 'none';
-    if (statusBadge) statusBadge.textContent = '🔒 Sorteo Definitivo Registrado';
+    if (statusBadge) statusBadge.textContent = '🏆 Sorteo Oficial Completado';
     if (statusPill) statusPill.classList.add('locked');
 
     if (lockedDeviceLabel) {
-      lockedDeviceLabel.textContent = 'Sorteo de prueba realizado';
+      lockedDeviceLabel.textContent = 'Sorteo Oficial Registrado';
     }
 
-    if (announceSub) announceSub.textContent = 'SORTEO DEFINITIVO DE PRUEBA';
-    if (announcePlayer) announcePlayer.textContent = '16 Cruces Definidos';
+    if (announceSub) announceSub.textContent = 'CRUCES OFICIALES DEFINIDOS';
+    if (announcePlayer) announcePlayer.textContent = '16 Cruces de 16-avos';
     if (announceDest) announceDest.textContent = 'Explorá el Fixture o completá tu Prode';
   } else {
     if (lockedBanner) lockedBanner.classList.add('hidden');
-    if (buttonsRow) buttonsRow.style.display = 'flex';
-    if (statusBadge) statusBadge.textContent = '🟢 Sorteo Único de Prueba';
     if (statusPill) statusPill.classList.remove('locked');
 
-    if (announceSub) announceSub.textContent = 'BOLILLERO LISTO';
-    if (announcePlayer) announcePlayer.textContent = 'Presioná el botón para comenzar';
-    if (announceDest) announceDest.textContent = '32 Jugadores esperando en el bombo';
+    if (isAdmin) {
+      if (buttonsRow) buttonsRow.style.display = 'flex';
+      const btnStart = document.getElementById('btnStartAutoDraw');
+      if (btnStart) btnStart.innerHTML = '<span>▶️ Iniciar Sorteo Oficial</span>';
+      if (statusBadge) statusBadge.textContent = '⚡ Modo Administrador: Listo para Sortear';
+      if (announceSub) announceSub.textContent = 'BOLILLERO OFICIAL';
+      if (announcePlayer) announcePlayer.textContent = 'Presioná el botón para iniciar el sorteo';
+      if (announceDest) announceDest.textContent = '32 Jugadores en el bombo listos para sortear';
+    } else {
+      if (buttonsRow) buttonsRow.style.display = 'none';
+      if (statusBadge) statusBadge.textContent = '⏳ A la espera del Sorteo Oficial';
+      if (announceSub) announceSub.textContent = 'SORTEO EN VIVO';
+      if (announcePlayer) announcePlayer.textContent = 'Aguardando el Sorteo Oficial';
+      if (announceDest) announceDest.textContent = 'El organizador realizará el sorteo oficial. Las llaves se completarán en vivo.';
+    }
   }
 }
 
@@ -303,9 +382,12 @@ function setupDrawSection() {
   const btnToProde = document.getElementById('btnGoToProdeFromDraw');
 
   btnStartAuto?.addEventListener('click', () => {
-    const lockInfo = isDrawLocked();
-    if (lockInfo.locked || (tournamentState.isDrawn && tournamentState.rounds.r16[0]?.player1)) {
-      alert('🔒 Ya realizaste el sorteo definitivo en este dispositivo. Tus 16 cruces ya están asignados.');
+    if (!isAdminAuthenticated()) {
+      alert('Solo el organizador administrador puede realizar el sorteo oficial.');
+      return;
+    }
+    if (tournamentState.isDrawn && tournamentState.rounds.r16[0]?.player1) {
+      alert('🏆 El sorteo oficial ya fue realizado.');
       return;
     }
 
@@ -317,11 +399,7 @@ function setupDrawSection() {
   });
 
   btnReset?.addEventListener('click', () => {
-    const lockInfo = isDrawLocked();
-    if (lockInfo.locked) {
-      alert('🔒 El sorteo está bloqueado como definitivo para este dispositivo. Podés desbloquearlo desde el Panel Admin.');
-      return;
-    }
+    if (!isAdminAuthenticated()) return;
     if (confirm('¿Deseas reiniciar el sorteo? Se vaciarán los cruces.')) {
       sound.playClick();
       drawManager.resetDraw();
@@ -343,24 +421,18 @@ function setupDrawSection() {
   renderDrawPoolAndPairs();
 }
 
-function handleDrawStepUpdate(event) {
+async function handleDrawStepUpdate(event) {
   const ballSphere = document.getElementById('drawBallSphere');
   const announcePlayer = document.getElementById('announcementPlayer');
   const announceDest = document.getElementById('announcementDest');
   const announceSub = document.getElementById('announcementSub');
   const statusBadge = document.getElementById('drawStatusText');
 
-  if (event.isAlreadyLocked) {
-    alert('🔒 Este dispositivo ya completó su sorteo definitivo de la Castillo Cup.');
-    checkAndApplyDrawLockState();
-    return;
-  }
-
   if (event.isReset) {
-    announcePlayer.textContent = 'Presioná el botón para comenzar';
+    announcePlayer.textContent = 'Aguardando el Sorteo Oficial';
     announceDest.textContent = '32 Jugadores esperando en el bombo';
     announceSub.textContent = 'BOLILLERO LISTO';
-    statusBadge.textContent = '🟢 Sorteo Único de Prueba';
+    statusBadge.textContent = '⏳ A la espera del Sorteo Oficial';
     ballSphere?.classList.remove('spin');
     checkAndApplyDrawLockState();
     renderDrawPoolAndPairs();
@@ -370,10 +442,14 @@ function handleDrawStepUpdate(event) {
 
   if (event.isComplete) {
     ballSphere?.classList.remove('spin');
-    announceSub.textContent = '¡SORTEO DEFINITIVO REGISTRADO!';
-    announcePlayer.textContent = '16 Cruces Definidos en tu Dispositivo';
+    announceSub.textContent = '¡SORTEO OFICIAL COMPLETADO!';
+    announcePlayer.textContent = '16 Cruces Oficiales Definidos';
     announceDest.textContent = '¡Ya podés cargar tu Prode y disputar la Castillo Cup!';
-    statusBadge.textContent = '🔒 Sorteo definitivo registrado';
+    statusBadge.textContent = '🏆 Sorteo Oficial Registrado';
+    saveTournamentState(tournamentState);
+    if (isAdminAuthenticated() && isSupabaseConfigured()) {
+      await saveRemoteTournamentState(tournamentState);
+    }
     checkAndApplyDrawLockState();
     renderDrawPoolAndPairs();
     refreshBracketViews();
@@ -385,7 +461,7 @@ function handleDrawStepUpdate(event) {
     announceSub.textContent = `BOLILLA #${event.totalDrawn} EXTRAÍDA`;
     announcePlayer.textContent = event.player.name;
     announceDest.textContent = `Asignado a: Llave #${event.matchIndex} (Lado ${event.slot})`;
-    statusBadge.textContent = `Sorteando... (${event.totalDrawn}/32)`;
+    statusBadge.textContent = `Sorteando en vivo... (${event.totalDrawn}/32)`;
     renderDrawPoolAndPairs();
     refreshBracketViews();
   }

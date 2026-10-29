@@ -1,10 +1,10 @@
 import { INITIAL_PLAYERS } from "../data/players.js";
 
-const STORAGE_KEY_TOURNAMENT = "castillo_cup_tournament_state_v1";
-const STORAGE_KEY_PRODE = "castillo_cup_prode_submissions_v1";
-const STORAGE_KEY_DRAW_LOCK = "castillo_cup_draw_lock_v1";
-const STORAGE_KEY_DEVICE_IP = "castillo_cup_device_ip_v1";
-const STORAGE_KEY_DEVICE_ID = "castillo_cup_device_id_v1";
+const STORAGE_KEY_TOURNAMENT = "castillo_cup_tournament_official_2026";
+const STORAGE_KEY_PRODE = "castillo_cup_prode_official_2026";
+const STORAGE_KEY_DRAW_LOCK = "castillo_cup_draw_lock_official_2026";
+const STORAGE_KEY_DEVICE_IP = "castillo_cup_device_ip_official_2026";
+const STORAGE_KEY_DEVICE_ID = "castillo_cup_device_id_official_2026";
 
 // Identificador único persistente para este dispositivo
 export function getOrGenerateDeviceId() {
@@ -269,7 +269,23 @@ export function loadTournamentState() {
           martin.confirmed = true;
         }
 
-        // Sincronizar en llaves existentes si estuviera asignado Alejinho
+        // Sincronizar reemplazo de Montana por Ariel Londero (ID 15)
+        const ariel = parsed.players?.find(p => p.id === 15 || p.name === "Montana");
+        if (ariel) {
+          ariel.name = "Ariel Londero";
+          ariel.alias = "Ariel Londero";
+          ariel.confirmed = true;
+        }
+
+        // Sincronizar reemplazo de Yordi por Ema Romario (ID 11)
+        const emaRom = parsed.players?.find(p => p.id === 11 || p.name === "Yordi");
+        if (emaRom) {
+          emaRom.name = "Ema Romario";
+          emaRom.alias = "Ema Romario";
+          emaRom.confirmed = true;
+        }
+
+        // Sincronizar en llaves existentes si estuvieran asignados
         Object.keys(parsed.rounds || {}).forEach(rk => {
           parsed.rounds[rk]?.forEach(m => {
             ["player1", "player2", "winner"].forEach(slot => {
@@ -277,12 +293,28 @@ export function loadTournamentState() {
                 m[slot].name = "Martin94";
                 m[slot].alias = "Martin94";
               }
+              if (m[slot] && (m[slot].id === 15 || m[slot].name === "Montana")) {
+                m[slot].name = "Ariel Londero";
+                m[slot].alias = "Ariel Londero";
+              }
+              if (m[slot] && (m[slot].id === 11 || m[slot].name === "Yordi")) {
+                m[slot].name = "Ema Romario";
+                m[slot].alias = "Ema Romario";
+              }
             });
           });
         });
         if (parsed.champion && (parsed.champion.id === 12 || parsed.champion.name === "Alejinho")) {
           parsed.champion.name = "Martin94";
           parsed.champion.alias = "Martin94";
+        }
+        if (parsed.champion && (parsed.champion.id === 15 || parsed.champion.name === "Montana")) {
+          parsed.champion.name = "Ariel Londero";
+          parsed.champion.alias = "Ariel Londero";
+        }
+        if (parsed.champion && (parsed.champion.id === 11 || parsed.champion.name === "Yordi")) {
+          parsed.champion.name = "Ema Romario";
+          parsed.champion.alias = "Ema Romario";
         }
 
         return parsed;

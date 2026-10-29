@@ -19,13 +19,6 @@
 
 <body>
   <div id="app">
-    <!-- Top Prototype Announcement Ribbon -->
-    <div class="prototype-top-ribbon">
-      <div class="prototype-ribbon-content">
-        <span class="proto-pill">🧪 Versión de Prueba</span>
-      </div>
-    </div>
-
     <!-- Header / Nav -->
     <header class="app-header" id="appHeader">
       <div class="header-container">
@@ -86,17 +79,12 @@
           <button class="action-icon-btn" id="soundToggleBtn" title="Activar/Silenciar Sonido" aria-label="Sonido">
             <span id="soundIcon">🔊</span>
           </button>
-          <!-- Botón Admin deshabilitado / Modo prototipo solo para jugadores
-          <button class="btn btn-admin-header" id="adminHeaderBtn">
-            <span>⚙️ Panel Admin</span>
-          </button>
-          -->
         </div>
       </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
+    <!-- Hero Section (Carátula y Cuenta Regresiva solo para Fixture) -->
+    <section class="hero-section" id="heroSection">
       <div class="hero-bg-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge">
@@ -117,7 +105,7 @@
 
         <p class="hero-desc">
           32 Jugadores mano a mano en partidos de Ida y Vuelta con resultado global y definición por tercer partido.
-          Lanzamiento oficial el <strong>Sábado 31 de Octubre a las 11:00 hs</strong>.
+          Lanzamiento oficial el <strong>Viernes 30 de Octubre a las 22:00 hs</strong>.
         </p>
 
         <!-- Prizes Showcase Grid -->
@@ -141,11 +129,11 @@
           </div>
         </div>
 
-        <!-- Countdown Timer to Oct 31 11:00 hs -->
+        <!-- Countdown Timer to Oct 30 22:00 hs -->
         <div class="countdown-container" id="countdownBox">
           <div class="countdown-label">
             <span class="countdown-icon">⏱️</span>
-            <span>CUENTA REGRESIVA PARA EL INICIO (SÁBADO 31/10 • 11:00 HS)</span>
+            <span>CUENTA REGRESIVA PARA EL INICIO (VIERNES 30/10 • 22:00 HS)</span>
           </div>
           <div class="countdown-units">
             <div class="time-block">
@@ -242,7 +230,7 @@
             <div class="draw-status-group">
               <div class="draw-status-pill" id="drawStatusBadge">
                 <span class="draw-pulse"></span>
-                <span id="drawStatusText">🟢 Sorteo Único de Prueba</span>
+                <span id="drawStatusText">🟢 Sorteo Oficial de 16-avos</span>
               </div>
             </div>
 
@@ -381,14 +369,14 @@
           <div class="round-team-card">
             <img src="/italia.png" alt="Italia" class="round-team-crest-large">
             <span class="round-team-phase">Semifinales</span>
-            <h4 class="round-team-name">Selección de Italia</h4>
+            <h4 class="round-team-name">Italia</h4>
             <p class="round-team-rule">🔵 Todos Italia</p>
           </div>
 
           <div class="round-team-card final">
             <img src="/brasil.png" alt="Brasil" class="round-team-crest-large">
             <span class="round-team-phase">Gran Final</span>
-            <h4 class="round-team-name">Selección de Brasil</h4>
+            <h4 class="round-team-name">Brasil</h4>
             <p class="round-team-rule">🟡🟢 Brasil vs. Brasil</p>
           </div>
         </div>
@@ -427,7 +415,7 @@
           <div class="rule-card">
             <div class="rule-num">05</div>
             <h3>Lanzamiento y Fechas Clave</h3>
-            <p>El torneo inicia el <strong>Sábado 31 de Octubre a las 11:00 hs</strong>. El sorteo oficial se llevará a cabo
+            <p>El torneo inicia el <strong>Viernes 30 de Octubre a las 22:00 hs</strong>. El sorteo oficial se llevará a cabo
               previo a dicha fecha para que todos los jugadores conozcan a sus rivales.</p>
           </div>
 
@@ -463,7 +451,12 @@
           <div class="footer-prizes-pill">
             <span>🏆 Pozo Total: $70.000 ARS</span>
           </div>
-          <p class="copyright">© 2026 Castillo Cup PES 6. Desarrollado por Martín Castillo.</p>
+          <div class="footer-bottom-row">
+            <p class="copyright">© 2026 Castillo Cup PES 6. Desarrollado por Martín Castillo.</p>
+            <button class="footer-gear-btn" id="adminFooterBtn" title="Configuración de Torneo" aria-label="Admin">
+              <span>⚙️</span>
+            </button>
+          </div>
         </div>
       </div>
     </footer>

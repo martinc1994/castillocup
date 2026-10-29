@@ -142,8 +142,74 @@ export class MatchModal {
           <p>⚠️ Este cruce aún no tiene ambos jugadores definidos. Los cruces se completan mediante el sorteo de 16-avos o conforme avancen los ganadores de rondas previas.</p>
         </div>
       `;
+    } else if (!isAdmin) {
+      // Vista Solo Lectura para Jugadores / Espectadores
+      html += `
+        <div class="match-readonly-board">
+          <div class="form-section-title">
+            <span>⚽ Partido de IDA (${teamConfig.ruleLabel})</span>
+          </div>
+          <div class="score-display-card">
+            <div class="score-side left">
+              <span class="score-pname">${p1Name}</span>
+              <span class="score-digit">${match.score1_ida !== null ? match.score1_ida : '-'}</span>
+            </div>
+            <span class="score-vs">VS</span>
+            <div class="score-side right">
+              <span class="score-digit">${match.score2_ida !== null ? match.score2_ida : '-'}</span>
+              <span class="score-pname">${p2Name}</span>
+            </div>
+          </div>
+
+          <div class="form-section-title">
+            <span>⚽ Partido de VUELTA (${teamConfig.ruleLabel})</span>
+          </div>
+          <div class="score-display-card">
+            <div class="score-side left">
+              <span class="score-pname">${p1Name}</span>
+              <span class="score-digit">${match.score1_vuelta !== null ? match.score1_vuelta : '-'}</span>
+            </div>
+            <span class="score-vs">VS</span>
+            <div class="score-side right">
+              <span class="score-digit">${match.score2_vuelta !== null ? match.score2_vuelta : '-'}</span>
+              <span class="score-pname">${p2Name}</span>
+            </div>
+          </div>
+
+          ${match.score1_extra !== null || match.score2_extra !== null ? `
+            <div class="form-section-title">
+              <span>⚡ Desempate: 3er Partido</span>
+            </div>
+            <div class="score-display-card extra">
+              <div class="score-side left">
+                <span class="score-pname">${p1Name}</span>
+                <span class="score-digit">${match.score1_extra !== null ? match.score1_extra : '-'}</span>
+              </div>
+              <span class="score-vs">VS</span>
+              <div class="score-side right">
+                <span class="score-digit">${match.score2_extra !== null ? match.score2_extra : '-'}</span>
+                <span class="score-pname">${p2Name}</span>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="match-official-summary ${outcome.isFinished ? 'finished' : 'pending'}">
+            ${outcome.isFinished ? `
+              <div class="summary-badge-row">
+                <span class="badge-finished">FINALIZADO</span>
+                <span class="badge-global">GLOBAL: ${outcome.global1} - ${outcome.global2}</span>
+              </div>
+              <div class="winner-congrats">
+                <span>👑 Clasifica a la siguiente fase: <strong>${outcome.winner?.name}</strong></span>
+              </div>
+            ` : `
+              <span class="text-muted">⏳ Marcador oficial a la espera de confirmación de la organización.</span>
+            `}
+          </div>
+        </div>
+      `;
     } else {
-      // Score Form
+      // Score Form (Solo para Admin)
       html += `
         <form id="matchScoreForm" class="match-score-form">
           <div class="form-section-title">
@@ -206,10 +272,10 @@ export class MatchModal {
             </div>
           </div>
 
-          <!-- Nota Prototipo -->
+          <!-- Aviso de Edición Oficial -->
           <div class="modal-proto-hint">
-            <span>🧪</span>
-            <small><strong>Modo Prototipo:</strong> Podés cargar marcadores de prueba para simular el avance de llaves en tu sesión.</small>
+            <span>🛡️</span>
+            <small><strong>Panel de Organización:</strong> Al guardar, los resultados se publican en el cuadro y se sincronizan.</small>
           </div>
 
           <!-- Botones de Acción -->
@@ -227,7 +293,7 @@ export class MatchModal {
 
     bodyEl.innerHTML = html;
 
-    if (hasBothPlayers) {
+    if (hasBothPlayers && isAdmin) {
       this.attachFormListeners(match);
     }
   }
